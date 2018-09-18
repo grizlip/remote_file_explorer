@@ -51,7 +51,9 @@ ServerCommunicationQT::getResponse(Request request)
   }
 
   tcpClient.disconnectFromHost();
-  tcpClient.waitForDisconnected();
+  if (tcpClient.state() == QAbstractSocket::ConnectedState) {
+    tcpClient.waitForDisconnected();
+  }
   return res;
 }
 }

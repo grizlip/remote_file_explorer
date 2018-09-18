@@ -26,10 +26,8 @@ main(int argc, char* argv[])
   QListView* list = new QListView(splitter.get());
 
   list->setDragEnabled(true);
-  list->setAcceptDrops(true);
   list->setSpacing(5);
   list->setMovement(QListView::Snap);
-  list->setDropIndicatorShown(true);
   QObject::connect(list, SIGNAL(doubleClicked(const QModelIndex&)), slm1,
                    SLOT(doubleClick(const QModelIndex&)));
   list->setModel(slm1);

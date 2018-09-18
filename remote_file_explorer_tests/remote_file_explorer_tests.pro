@@ -9,7 +9,9 @@ CONFIG += qt
 QT += core network
 
 HEADERS += \
-        tst_maintest.h
+        tst_maintest.h \
+    	servercommunicationmock.h
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+    	servercommunicationmock.cpp

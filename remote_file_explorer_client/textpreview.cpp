@@ -12,32 +12,6 @@ TextPreview::TextPreview(ServerAccess* sa, QWidget* parent)
 }
 
 void
-TextPreview::setContents(const QString& fileName)
-{
-  QFileInfo fi(fileName);
-  srcUrl = QUrl::fromLocalFile(fi.absoluteFilePath());
-  QFile file(fileName);
-  if (file.open(QIODevice::ReadOnly)) {
-    QString data(file.readAll());
-    if (fileName.endsWith(".html"))
-      setHtml(data);
-    else
-      setPlainText(data);
-  }
-}
-
-QVariant
-TextPreview::loadResource(int type, const QUrl& name)
-{
-  if (type == QTextDocument::ImageResource) {
-    QFile file(srcUrl.resolved(name).toLocalFile());
-    if (file.open(QIODevice::ReadOnly))
-      return file.readAll();
-  }
-  return QTextEdit::loadResource(type, name);
-}
-
-void
 TextPreview::dragEnterEvent(QDragEnterEvent* event)
 {
   if (event->mimeData()->hasFormat("text/x-drag-and-drop-piece"))

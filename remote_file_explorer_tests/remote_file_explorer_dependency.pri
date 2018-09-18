@@ -15,9 +15,12 @@ HEADERS +=\
 INCLUDEPATH += ../remote_file_explorer_library/
 
 SOURCES += \
-    ../remote_file_explorer_client/serveraccess.cpp
+    ../remote_file_explorer_client/serveraccess.cpp \
+    ../remote_file_explorer_client/servercommunication.cpp
+
 HEADERS += \
-    ../remote_file_explorer_client/serveraccess.h
+    ../remote_file_explorer_client/serveraccess.h \
+    ../remote_file_explorer_client/servercommunication.h
 
 INCLUDEPATH += ../remote_file_explorer_client/
 

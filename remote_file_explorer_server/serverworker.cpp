@@ -45,6 +45,9 @@ ServerWorker::run()
   out << *write.get();
   tcpSocket.write(outBlock);
   tcpSocket.disconnectFromHost();
+  if (tcpSocket.state() == QAbstractSocket::ConnectedState) {
+    tcpSocket.waitForDisconnected();
+  }
   tcpSocket.waitForDisconnected();
 }
 }

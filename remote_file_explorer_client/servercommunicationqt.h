@@ -18,7 +18,6 @@ public:
   {
   }
   Response getResponse(Request request) override;
-  //    ~ServerCommunicationQT() override;
 signals:
   void newFilesList(QList<QString>& list);
   void newFilePreview(const QString& string);

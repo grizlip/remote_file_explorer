@@ -22,7 +22,9 @@ public:
   }
 
   int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+
   QVariant data(const QModelIndex& index, int role) const override;
+
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const override;
 
@@ -37,37 +39,21 @@ public:
   bool setData(const QModelIndex& index, const QVariant& value,
                int role) override;
 
-  Qt::ItemFlags flags(const QModelIndex& index) const override
-  {
-    if (index.isValid())
-      return (QAbstractListModel::flags(index) | Qt::ItemIsDragEnabled |
-              Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+  Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    return Qt::NoItemFlags;
-  }
-
-  bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row,
-                    int column, const QModelIndex& parent) override;
   QMimeData* mimeData(const QModelIndexList& indexes) const override;
+
   QStringList mimeTypes() const override;
 
-  Qt::DropActions supportedDropActions() const override
-  {
-    return Qt::IgnoreAction;
-  }
-
-  Qt::DropActions supportedDragActions() const override
-  {
-    return Qt::CopyAction;
-  }
   void setInitialPath();
 public slots:
   void doubleClick(const QModelIndex&);
+
   void newFilesListAvilable(QList<QString>& list);
 
 protected:
   ServerAccess* m_sa;
-  QStringList stringList;
+  QStringList m_stringList;
   QString m_currentPath;
 };
 }

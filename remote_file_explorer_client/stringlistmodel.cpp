@@ -10,7 +10,7 @@ int
 StringListModel::rowCount(const QModelIndex& parent) const
 {
   (void)parent;
-  return stringList.count();
+  return m_stringList.count();
 }
 
 QVariant
@@ -19,11 +19,11 @@ StringListModel::data(const QModelIndex& index, int role) const
   if (!index.isValid())
     return QVariant();
 
-  if (index.row() >= stringList.size())
+  if (index.row() >= m_stringList.size())
     return QVariant();
 
   if (role == Qt::DisplayRole)
-    return stringList.at(index.row());
+    return m_stringList.at(index.row());
   else
     return QVariant();
 }
@@ -49,7 +49,7 @@ StringListModel::insertRows(int row, int count, const QModelIndex& parent)
   beginInsertRows(parent, row, row + count - 1);
 
   for (int i = 0; i < count; i++) {
-    stringList.insert(row, "");
+    m_stringList.insert(row, "");
     result = true;
   }
 
@@ -76,7 +76,7 @@ StringListModel::removeRows(int row, int count, const QModelIndex& parent)
     beginRemoveRows(parent, row, row + count - 1);
 
     for (int i = 0; i < count; i++) {
-      stringList.removeAt(row);
+      m_stringList.removeAt(row);
       result = true;
     }
 
@@ -93,14 +93,14 @@ StringListModel::setData(const QModelIndex& index, const QVariant& value,
   if (!index.isValid())
     result = false;
 
-  if (index.row() >= stringList.size())
+  if (index.row() >= m_stringList.size())
     result = false;
 
   if (role == Qt::EditRole) {
-    if (stringList.count() > 0) {
-      stringList.replace(index.row(), value.toString());
+    if (m_stringList.count() > 0) {
+      m_stringList.replace(index.row(), value.toString());
     } else {
-      stringList.push_back(value.toString());
+      m_stringList.push_back(value.toString());
     }
     emit dataChanged(QModelIndex(), QModelIndex());
     result = true;
@@ -109,33 +109,14 @@ StringListModel::setData(const QModelIndex& index, const QVariant& value,
   return result;
 }
 
-bool
-StringListModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
-                              int row, int column, const QModelIndex& parent)
+Qt::ItemFlags
+StringListModel::flags(const QModelIndex& index) const
 {
-  if (!data->hasFormat("text/x-drag-and-drop-piece"))
-    return false;
+  if (index.isValid())
+    return (QAbstractListModel::flags(index) | Qt::ItemIsDragEnabled |
+            Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-  if (action == Qt::IgnoreAction)
-    return true;
-
-  if (column > 0)
-    return false;
-
-  if (row == -1) {
-    // here we are trying to put something after last item
-    row = stringList.count();
-  }
-  QByteArray encodedData = data->data("text/x-drag-and-drop-piece");
-  QDataStream stream(&encodedData, QIODevice::ReadOnly);
-  QString string;
-  stream >> string;
-
-  beginInsertRows(parent, row, row);
-  stringList.insert(row, string);
-  endInsertRows();
-
-  return true;
+  return Qt::NoItemFlags;
 }
 
 QMimeData*
@@ -169,19 +150,20 @@ StringListModel::mimeTypes() const
 void
 StringListModel::newFilesListAvilable(QList<QString>& list)
 {
-  this->stringList.clear();
+  m_stringList.clear();
   auto it = list.begin();
 
   int row = 0;
   while (it != list.end()) {
     if (!(it.i->t() == ".")) {
       beginInsertRows(QModelIndex(), row, row);
-      this->stringList.push_back(it.i->t());
+      m_stringList.push_back(it.i->t());
       row++;
       endInsertRows();
     }
     it++;
   }
+  m_stringList.sort();
 }
 
 void
@@ -210,6 +192,7 @@ StringListModel::doubleClick(const QModelIndex& index)
     m_sa->setNewPath(m_currentPath);
   }
 }
+
 void
 StringListModel::setInitialPath()
 {

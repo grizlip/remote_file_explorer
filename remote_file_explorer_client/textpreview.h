@@ -13,17 +13,13 @@ class TextPreview : public QTextEdit
 
 public:
   TextPreview(ServerAccess* sa, QWidget* parent = nullptr);
-  void setContents(const QString& fileName);
 
 private:
-  QVariant loadResource(int type, const QUrl& name) override;
   void dragLeaveEvent(QDragLeaveEvent* event) override;
   void dragMoveEvent(QDragMoveEvent* event) override;
   void dropEvent(QDropEvent* event) override;
   void dragEnterEvent(QDragEnterEvent* event) override;
 
-  QUrl srcUrl;
-  QString m_host;
   ServerAccess* m_sa;
 };
 }
